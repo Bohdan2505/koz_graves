@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+
+
+
+  <link rel="stylesheet" href="leaflet.css" />
+<script src="leaflet.js"></script>
+
+
+		<!-- Leaflet-Rotate -->
+		<script src="https://unpkg.com/leaflet-rotate@0.2.8/dist/leaflet-rotate-src.js"></script>
+
+
+<link rel="stylesheet" href="L.Control.Layers.Tree.css" />
+<script src="L.Control.Layers.Tree.js"></script>
+
+
+<script src='Leaflet.fullscreen.min.js'></script>
+<link rel='stylesheet' href='leaflet.fullscreen.css' />
+
+<script src="imask.js"></script>
+
+
+<script src="choices.min.js"></script>
+<link   rel="stylesheet" href="choices.min.css" />
+
+<script src="graves.js"></script>
+
+<script src="row_label_point.js"></script>
+
+<script src="rows_polygons.js"></script>
+
+<script src="section_polygon.js"></script>
+
+<script src="section_label_points.js"></script>
+
+
+
+
+<style>
+    #map { position:absolute; top:0; left:0; bottom:0; right:0; height:100%; width:100%; z-index: 1; background: white} 
+    #scrollable {
+        width: 100%;
+        height: 200px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        /*text-align: center;*/
+        padding: 5px;
+      }
+    .leaflet-grab { cursor: auto; }
+    .leaflet-dragging .leaflet-grab{ cursor: move; }
+    .leaflet-popup-content {font-size: 14px}
+    .leaflet-popup-content {	width: 90%!important;  height: 90%!important;}
+    .leaflet-popup-content-wrapper {	width: 400px!important;}
+    .hromada-label { background: transparent; border: 6px transparent; 	pointer-events: none; 
+    box-shadow: none; line-height: 0.75; font-weight: 800; padding: 0px!important; margin: 0px!important;}
+
+    .leaflet-control-layers-toggle {background-image: url(layers.png);}
+
+    .leaflet-retina .leaflet-control-layers-toggle {background-image: url(layers-2x.png);}
+      .search-alert {font-size: 14px!important;}
+
+      .search-input {font-size: 17px; }
+
+      .search-tip {font-size: 14px!important;}
+
+      .search-icon-info {background: url('search-icon.png') no-repeat 4px 4px #fff; 
+border-radius: 4px;
+width:30px;
+height:30px;
+pointer-events: none;
+cursor: default;
+display:inline-block;
+transform: scale(0.7);}
+/*     .leaflet-control-attribution a {  font-size: 1.5em !important;} */
+    </style>
+    <title>Схема кладовища</title>
+  </head>
+  <body>
+    <header></header>
+    <main>
+      <div id="map">
+      <div id="mySidepanel" class="sidepanel">
+        <h3 style="padding:2%; font-size:1.5em; text-align: center; margin:5px">ПАНЕЛЬ ПОШУКУ</h3>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+     
+        <div style="width: 90%; margin-left: 5%;    height: 90%; overflow-y: auto;">
+        <h4 style="font-size:1.3em; text-align:center; margin:5px">Введіть П.І.Б. людини та оберіть серед доступних варіантів та натисніть кнопку "Показати на карті"</h4>
+       
+        <hr>
+
+        <select style="width: 95%;" class="choices__input choices__input--cloned start_price_input" id="full_name_search_input" placeholder="П.І.Б." ></select>
+      
+      <hr>
+    
+      <h4><a href="javascript:void(0)" style="padding: 5px; font-size:1.5em; text-align:center" onclick="search_grave()">Показати на карті</a></h4>
+  
+      <h4 style="font-size:1.3em; text-align:center">Знайшли помилку? Маєте пропозицію?<br> Звертайтеся за формою зворотнього зв'язку за посиланням: __типу_посилання__
+      </h4>
+      <br> 
+      
+
+      </div>
+      </div>
+
+      <div id="popup_window" class="overlay">
+        <div class="popup">
+        
+          
+          <a class="close" href="#" onclick='close_popup_window()'>&times;</a>
+          <div id="popup_title"></div>
+                <br>
+              <div id="popup_total_parcels_info"></div>
+              <div class="content">
+                <br>
+              
+                <br>
+              <div id="popup_table"></div>
+              
+  
+              </div>
+          
+      </div>
+      </div>
+    </div>
+
+
+    </main>
+    <footer></footer>
+    
+    
+  </body>
+  
+  
+  <style>
+.start_price_input {
+  font-size:1.2em; font-family: Chivo; border:1px #000; padding: 7.5px 7.5px 3.75px;
+  border: 1px solid #ddd;
+  border-radius: 2.5px;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 1001;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+  z-index: 1;
+}
+
+
+.popup {
+  margin: 20px auto;
+  padding: 10px;
+  background: #fff;
+  font-family: "Unbounded";
+  max-height: 80%;
+  overflow: auto; 
+  border-radius: 5px;
+  width: 80%;
+  position: relative;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #000;
+  font-family: "Unbounded";
+}
+.popup .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #000;
+  text-align: center;
+}
+.popup .close:hover {
+  border: transparent;
+  color: #cbe86a;
+  background-color: #043f2d
+}
+.popup .content {
+  max-height: 50%;
+  overflow: auto;
+}
+
+.popup table, .popup td, .popup th {
+  border: 1px solid;
+}
+
+.info {
+    padding: 6px 8px;
+
+/*     background: white; */
+    background: rgba(255,255,255,1);
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    font-family: "Unbounded";
+    width:100%;
+
+}
+.info h4 {
+    margin: 0 0 5px;
+/*     color: #777; */
+} 
+.choices {
+
+  margin-bottom: 10px;
+  margin-right:10px;
+  margin-left:10px
+}
+.legend {
+    background: rgba(255,255,255,1);
+    line-height: 18px;
+    width: 20em;
+    color: #555;
+    opacity: 1;
+    z-index:500!important;
+    font-family: "Unbounded"
+}
+
+.legend:hover {
+  border-color:#043f2d
+}
+
+
+.leaflet-top,
+.leaflet-bottom {
+z-index: auto!important;
+}  
+
+.info i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.5;
+}
+
+#side_panel_open_button h3 {
+  color:#000;
+}
+
+#side_panel_open_button {
+border: transparent;
+}
+
+
+#side_panel_open_button:hover {
+  border: transparent;
+ 
+  background-color: #d1e0e6
+}
+
+.sidepanel  {
+  width: 0;
+  position: fixed;
+  z-index: 1000;
+  height: 50%;
+  bottom: 20px;
+  right: 0;
+  background: rgba(255,255,255,1);
+  font-family: "Unbounded";
+  overflow: hidden;
+  transition: 0.5s;
+  padding-top: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+
+}
+
+.sidepanel a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #000;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidepanel a:hover {
+
+  background-color: #d1e0e6
+}
+
+.sidepanel .closebtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-right: 25px;
+  font-size: 36px;
+}
+
+
+
+
+</style>
+
+<script src="map_script.js"></script>
+<!-- <script src="filter_script.js"></script> -->
+</html>
