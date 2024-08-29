@@ -34,6 +34,10 @@ map.getPane('grave_layer').style.zIndex = 601;
 map.createPane('labels');
 map.getPane('labels').style.zIndex = 599
 
+
+map.createPane('labels_xyz');
+map.getPane('labels_xyz').style.zIndex = 603
+
 info.addTo(map);
 L.control.zoom({
 //     position: 'topleft'
