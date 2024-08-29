@@ -251,6 +251,9 @@ let grave_layer = new L.geoJson(graves_data, {
     id: "grave_layer", layername: 'Місця поховань', style: style_grave, onEachFeature: onEachFeatureGrave
 }).addTo(map)
 
+
+var graves_num =  L.tileLayer('xyz_tiles/{z}/{x}/{y}.png', {pane: 'labels_xyz', maxNativeZoom:21, maxZoom:22,  minZoom: 21, id: "graves_num", layername: 'Номери місць поховань'}).addTo(map)
+
 function merge_table_and_geom(table_data, geojson) {
 
     let table_json_with_id = {}
