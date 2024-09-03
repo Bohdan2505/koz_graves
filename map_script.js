@@ -3,15 +3,13 @@ let northEast = L.latLng(51, 40),
 let bounds = L.latLngBounds(northEast, southWest);
 
 
-let map = L.map('map', { center: bounds.getCenter(), rotate: true,    rotateControl: {        closeOnZeroBearing: false,    }, touchRotate: true,    bearing: 4,renderer: L.canvas(), zoom: 19, minZoom: 19, maxZoom: 22, zoomControl: false, preferCanvas: true,  scrollWheelZoom: true });
+let map = L.map('map', { center: bounds.getCenter(), rotate: true,  rotateControl: {        closeOnZeroBearing: false,    }, touchRotate: false,    bearing: 4,renderer: L.canvas(), zoom: 19, minZoom: 19, maxZoom: 22, zoomControl: false, preferCanvas: true,  scrollWheelZoom: true });
 map.attributionControl.addAttribution('<a href="https://kozelshchynska-gromada.gov.ua/">&copy; Козельщинська ТГ</a> | <a href="https://openstreetmap.org.ua" target="_blank" > &copy; OpenStreetMap Ukraine</a>');
 
 
-let openstreetmap = L.tileLayer('https://tile.openstreetmap.org.ua/styles/osm-bright/{z}/{x}/{y}.png', { id: "OpenStreetMapUA", layername: 'OpenStreetMapUA', preferCanvas: true, maxZoom: 22 })
-
-var googlemaps =  L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {maxNativeZoom:18, maxZoom: 22, id: "GoogleMaps", layername: 'Google знімки із супутника'})
-
 var white_background = L.tileLayer('').addTo(map)
+
+
 
 
 let info = L.control({ position: 'bottomleft' });
@@ -32,11 +30,19 @@ map.createPane('grave_layer');
 map.getPane('grave_layer').style.zIndex = 601;
 
 map.createPane('labels');
-map.getPane('labels').style.zIndex = 599
+map.getPane('labels').style.zIndex = 199
 
 
 map.createPane('labels_xyz');
 map.getPane('labels_xyz').style.zIndex = 603
+
+
+
+// map.getPane('tilePane').style.zIndex = 602
+
+
+var graves_num =  L.tileLayer('xyz_tiles/{z}/{x}/{y}.png', {minNativeZoom:20, maxNativeZoom:22, maxZoom:22,  minZoom: 21, id: "graves_num", layername: 'Номери місць поховань'}).addTo(map)
+
 
 info.addTo(map);
 L.control.zoom({
@@ -62,7 +68,9 @@ function highlightFeature(e) {
 }
 function resetHighlightLayer(e) {
 
-    e.target._eventParents[Object.keys(e.target._eventParents)[0]].resetStyle(e.target);
+    e.target.setStyle(e.target.options.style(e.target.feature, e.target));
+    
+    // 
 }
 
 
@@ -228,35 +236,35 @@ function style_row_polygon(feature) {
     };
 }
 
-let section_polygon_layer = new L.geoJson(section_polygon, { 
+let section_polygon_layer = new L.geoJson(section_polygon, { renderer: L.canvas(),
     id: "section_polygon_layer", layername: 'Сектори', style: {color: 'black', fillColor: '#f4f7f7', weight: 3}
 }).addTo(map)
 
 
-let row_polygon_layer = new L.geoJson(rows_polygon_data, { 
+let row_polygon_layer = new L.geoJson(rows_polygon_data, { renderer: L.canvas(),
     id: "row_polygon_layer", layername: 'Ряди', style: style_row_polygon
 }).addTo(map)
 
 
-let row_label_point_layer = new L.geoJson(row_label_point_data, { 
+let row_label_point_layer = new L.geoJson(row_label_point_data, { renderer: L.canvas(),
     id: "row_label_point_layer", layername: 'Підписи рядів', pointToLayer: function(feature,latlng){
         return L.marker(latlng,{icon: L.divIcon({className: ''})});
       }, onEachFeature: onEachFeatureRowPointLabel
 }).addTo(map)
 
-let section_label_points_layer = new L.geoJson(section_label_points, { 
+let section_label_points_layer = new L.geoJson(section_label_points, { renderer: L.canvas(),
     id: "section_label_points_layer", layername: 'Підписи секторів', pointToLayer: function(feature,latlng){
         return L.marker(latlng,{icon: L.divIcon({className: ''})});
       }, onEachFeature: onEachFeatureSectionPointLabel
 }).addTo(map)
 
 
-let grave_layer = new L.geoJson(graves_data, { 
+let grave_layer = new L.geoJson(graves_data, { renderer: L.canvas(),
     id: "grave_layer", layername: 'Місця поховань', style: style_grave, onEachFeature: onEachFeatureGrave
 }).addTo(map)
 
 
-var graves_num =  L.tileLayer('xyz_tiles/{z}/{x}/{y}.png', {pane: 'labels_xyz', maxNativeZoom:21, maxZoom:22,  minZoom: 21, id: "graves_num", layername: 'Номери місць поховань'}).addTo(map)
+
 
 function merge_table_and_geom(table_data, geojson) {
 
@@ -480,4 +488,4 @@ let overlaysTree = {
 let layer_tree = L.control.layers.tree(baseTree, overlaysTree, {
     closedSymbol: '&#8862; &#x1f5c0;',
     openedSymbol: '&#8863; &#x1f5c1;',
-}).addTo(map);
+})
