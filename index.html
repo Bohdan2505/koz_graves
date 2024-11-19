@@ -17,60 +17,29 @@
 
 .button_slider {
   position: absolute;
-    bottom: 15px;
-    left: 0;
-    width: 20em;
+    top: 2%;
+    right: 0.5em;
     background: rgba(255,255,255,1);
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    border-radius: 5px;
+    /* box-shadow: 0 0 15px rgba(0,0,0,0.5); */
+    /* border-radius: 5px; */
 }
 
-.info-panel  {
-  width: 0;
-  position: fixed;
-  z-index: 1000;
-  height: 40%;
-  bottom: 15px;
-  left: 0;
-  background: rgba(255,255,255,1);
-  overflow: hidden;
-  transition: 0.5s;
-  padding-top: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
-
-}
-
-.info-panel a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 15px;
-  color: #000;
-  display: block;
-  transition: 0.3s;
-}
-
-.info-panel a:hover {
-
-  background-color: #d1e0e6
-}
-
-.info-panel .closebtn {
+.ol-touch .button_slider {
   position: absolute;
-  top: 0;
-  right: 0;
-  padding-right: 25px;
-  font-size: 36px;
+  top:  2%;
+  right: 0.5em;
 }
+
 
 .ol-touch .map-legend {
   position: absolute;
-  bottom:  15px;
+  bottom:  2%;
   right: 0.5em;
 }
 
 .map-legend {
   position: absolute;
-  bottom:  15px;
+  bottom:  2%;
   right: 0.5em;
   padding: 6px 8px;
   box-shadow: 0 0 15px rgba(0,0,0,0.5);
@@ -147,6 +116,68 @@
   content: "✖";
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 500ms;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 1;
+}
+.overlay:target {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+}
+
+.popup {
+    margin: 20px auto;
+    padding: 10px;
+    background: #fff;
+    height: 95%;
+    max-height: 80%;
+    overflow: auto;
+    border-radius: 5px;
+    width: 90%;
+    position: relative;
+}
+
+.popup h2 {
+    margin-top: 0;
+    color: #000;
+    font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    transition: all 200ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000;
+}
+.popup .close:hover {
+    color: #06D85F;
+}
+.popup .content {
+    height: 95%;
+    overflow: auto;
+}
+
+.popup table, .popup td, .popup th {
+    border: 1px solid;
+}
+
+.choices__inner {
+
+  font-size: 20px;
+}
+
 </style>
 </head>
 <body>
@@ -154,18 +185,31 @@
       <div id="info"></div>
 
     </div>
-    <div id="info_panel_div" class="info-panel ol-unselectable ol-control">
-      <p style=" font-size:1.5em; text-align: center; margin:5px"><b>ПАНЕЛЬ ПОШУКУ</b></p>
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-      <div style="width: 95%;  height: 90%; overflow-y: auto;">
-      <p style="text-align:center; font-size:1.2em; margin:5px">Введіть П.І.Б. людини та оберіть серед доступних варіантів та натисніть кнопку "Показати на карті"</p>
+    
 
-      <select style="width: 95%;" class="choices__input choices__input--cloned start_price_input" id="full_name_search_input" placeholder="П.І.Б." ></select>
+  <div id="popup_window" class="overlay">
+    <div class="popup">
+<a class="close" href="#" onclick='closePopupSearchWindow()'>&times;</a>
+<div class="content">
 
-      <p><a href="javascript:void(0)" style="font-size:1.2em; padding: 5px; text-align:center" onclick="search_grave()">Показати на карті</a></p>
 
+    <p style=" font-size:1.5em; text-align: center; margin:5px"><b>ПАНЕЛЬ ПОШУКУ</b></p>
+    <div style="width: 95%;  height: 90%; ">
+    <p style="text-align:center; font-size:1.2em; margin:5px">Введіть П.І.Б. людини та оберіть серед доступних варіантів та натисніть кнопку "Показати на карті"</p>
+
+    <select style="width: 95%; font-size:1.2em;" class="choices__input choices__input--cloned start_price_input" id="full_name_search_input" placeholder="П.І.Б." ></select>
+
+    <p><button style="font-size:1.2em; padding: 5px; text-align:center" onclick="search_grave()">Показати на карті</button></p>
+
+</div>
+
+
+</div>
+</div>
   </div>
-  </div>
+
+
+
 
   <div id="popup" class="ol-popup">
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>

@@ -78,12 +78,15 @@ class InfoPanelControl extends ol.control.Control {
         // element.className = 'right_bottom ol-unselectable ol-control';
         const button = document.createElement('button')
         button.id = 'side_panel_open_button'
-        button.className ='button_slider ol-control'
-        button.onclick = openNav //openNav
-        button.innerHTML = '<h3 style="text-align:center">ПАНЕЛЬ ПОШУКУ</h3>'
+        button.onclick = openPopupSearchWindow //openNav
+        button.innerHTML = `&#x1F50D`
+        
+        const element = document.createElement('div');
+        element.className = 'button_slider ol-unselectable ol-control';
+        element.appendChild(button);
 
         super({
-            element: button,
+            element: element,
             target: options.target,
         });
 
@@ -140,38 +143,27 @@ function search_grave() {
     // Центруємо карту на об'єкті
     map.getView().fit(extent, { duration: 500, maxZoom: 22 });
     setTimeout(function() { click_on_map( map.getPixelFromCoordinate(ol.extent.getCenter(extent)))}, 600)
+    closePopupSearchWindow()
+}
+
+function closePopupSearchWindow() {
+    let popup_window = document.getElementById('popup_window')
+    popup_window.style.visibility = 'hidden';
+    popup_window.style.opacity = 0
 
 }
 
-function openNav() {
-    let info_panel_div = document.getElementById("info_panel_div");
+function openPopupSearchWindow() {
+    let popup_window = document.getElementById('popup_window')
 
-    info_panel_div.style.width = "35%";
     full_name_search.clearChoices()
     full_name_search.setChoices(create_choices_from_source(gravesLayer.getSource()))
-    return null
+    
+    
+    popup_window.style.visibility = 'visible';
+    popup_window.style.opacity = 1
     
 }
-
-function closeNav() {
-
-    let info_panel_div = document.getElementById("info_panel_div");
-    info_panel_div.style.width = "0";
-    let main_html_tag = document.querySelector("main");
-    button = document.createElement('button')
-    button.setAttribute('id', 'side_panel_open_button')
-    button.setAttribute('class', 'info legend')
-    button.onclick = openNav
-    button.innerHTML = '<h3 style="text-align:center">ПАНЕЛЬ ПОШУКУ</h3>'
-
-
-    return null
-    
-}
-
-
-
-
 
 
 const labelStyle_graves = new ol.style.Style({
