@@ -112,22 +112,7 @@ function create_choices_from_source(source) {
     return graves_choices
 }
 
-function simulateClickAtCenter(center) {
 
-    
-    if (center) {
-        const pixel = map.getPixelFromCoordinate(center); // Конвертуємо координати в пікселі
-
-            const event = {
-                type : 'click',
-                pixel : pixel,
-            }
-
-            map.dispatchEvent(event) // Викликаємо подію
-
-        // map.getViewport().dispatchEvent(clickEvent); 
-    }
-}
 
 
 
@@ -151,9 +136,11 @@ function search_grave() {
     const feature = searchFeatureByAttribute('id', search_value, gravesLayer.getSource())
     const geometry = feature.getGeometry();
     const extent = geometry.getExtent();
+    
     // Центруємо карту на об'єкті
-    map.getView().fit(extent, { duration: 1000, maxZoom: 22 });
-    simulateClickAtCenter(ol.extent.getCenter(extent))
+    map.getView().fit(extent, { duration: 500, maxZoom: 22 });
+    setTimeout(function() { click_on_map( map.getPixelFromCoordinate(ol.extent.getCenter(extent)))}, 600)
+
 }
 
 function openNav() {
@@ -623,34 +610,32 @@ closer.onclick = function () {
 //     info.innerHTML = ``;
 // });
 
-
-map.on('click', function (e) {
-    if (selected !== null) {
+function click_on_map(pixel) {
+if (selected !== null) {
     selected.setStyle(undefined);
     selected = null;
     }
 
-    currentFeature = undefined;
-    info.style.visibility = 'hidden';
-    info.innerHTML = ``;
-
-    all_features_list = map.getFeaturesAtPixel(e.pixel)
-
+    all_features_list = map.getFeaturesAtPixel(pixel)
+    
     if (all_features_list) {
+        console.log(all_features_list)
         for (index in all_features_list) {
             feature = all_features_list[index]
             let layer_title = feature.getLayer(map).get('title')
             console.log(layer_title)
             if (layer_title == 'Місця поховань') {
-                displayGraveInfo(map.getCoordinateFromPixel(e.pixel), feature, layer_title)
+                displayGraveInfo(map.getCoordinateFromPixel(pixel), feature, layer_title)
                 selected = feature;
                 selectStyle.getFill().setColor( 'blue');
                 selected.setStyle(selectStyle);
-
-
             }
             else {//pass}
         }
         }
     }
+}
+
+map.on('click', function (e) {
+    click_on_map(e.pixel)
 });
