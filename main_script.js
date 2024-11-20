@@ -40,6 +40,11 @@ ol.Feature.prototype.getLayer = function(map) {
     return layer_;
 };
 
+const attribution = new ol.control.Attribution({
+    collapsible: false,
+    attributions: `<a href="https://kozelshchynska-gromada.gov.ua/"> Козельщинська ТГ</a> | <a href="https://github.com/Bohdan2505/koz_graves" target="_blank" > Github repository</a>`,
+});
+
 class MapLegendControl extends ol.control.Control {
     /**
      * @param {Object} [opt_options] Control options.
@@ -127,7 +132,7 @@ function searchFeatureByAttribute(attribute, value, source) {
             return feature; // Повертаємо знайдений об'єкт
         }
     }
-    alert("Feature not found");
+    alert("Немає результатів за запитом");
     return null;
 }
     
@@ -465,7 +470,7 @@ const overlay = new ol.Overlay({
  // Створюємо карту
 const map = new ol.Map({
     interactions: ol.interaction.defaults.defaults({altShiftDragRotate:false, pinchRotate:false}),
-    controls: ol.control.defaults.defaults({rotate: false}).extend([new MapLegendControl, new InfoPanelControl]),//layerSwitcher, FullScreen, new RotateNorthControl]),
+    controls: ol.control.defaults.defaults({rotate: false}).extend([new MapLegendControl, new InfoPanelControl, attribution]),//layerSwitcher, FullScreen, new RotateNorthControl]),
     target: 'map',
     overlays: [overlay],
     layers: [

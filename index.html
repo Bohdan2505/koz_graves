@@ -20,6 +20,8 @@
     top: 2%;
     right: 0.5em;
     background: rgba(255,255,255,1);
+    font-size: 1.5em;
+    border: 1px solid #ccc;
     /* box-shadow: 0 0 15px rgba(0,0,0,0.5); */
     /* border-radius: 5px; */
 }
@@ -28,18 +30,19 @@
   position: absolute;
   top:  2%;
   right: 0.5em;
+  font-size: 1em;
 }
 
 
 .ol-touch .map-legend {
   position: absolute;
-  bottom:  2%;
+  bottom:  3%;
   right: 0.5em;
 }
 
 .map-legend {
   position: absolute;
-  bottom:  2%;
+  bottom:  3%;
   right: 0.5em;
   padding: 6px 8px;
   box-shadow: 0 0 15px rgba(0,0,0,0.5);
@@ -50,29 +53,29 @@
 }
 
 .map-legend i {
-    width: 18px;
-    height: 18px;
-    float: left;
-    margin-right: 8px;
-    opacity: 0.5;
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.5;
 }
 
 #info {
-        position: absolute;
-        display: inline-block;
-        height: auto;
-        width: auto;
-        z-index: 100;
-        background-color: #fff;
-        color: #000;
-        text-align: center;
-        border-radius: 4px;
-        padding: 5px;
-        left: 50%;
-        transform: translateX(3%);
-        visibility: hidden;
-        pointer-events: none;
-      }
+  position: absolute;
+  display: inline-block;
+  height: auto;
+  width: auto;
+  z-index: 100;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px;
+  left: 50%;
+  transform: translateX(3%);
+  visibility: hidden;
+  pointer-events: none;
+}
 
 .ol-popup {
   position: absolute;
@@ -117,49 +120,49 @@
 }
 
 .overlay {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
-    transition: opacity 500ms;
-    visibility: hidden;
-    opacity: 0;
-    z-index: 1;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 1;
 }
 .overlay:target {
-    visibility: visible;
-    opacity: 1;
-    z-index: 1;
+  visibility: visible;
+  opacity: 1;
+  z-index: 1;
 }
 
 .popup {
-    margin: 20px auto;
-    padding: 10px;
-    background: #fff;
-    height: 95%;
-    max-height: 80%;
-    overflow: auto;
-    border-radius: 5px;
-    width: 90%;
-    position: relative;
+  margin: 20px auto;
+  padding: 10px;
+  background: #fff;
+  height: 95%;
+  max-height: 80%;
+  overflow: auto;
+  border-radius: 5px;
+  width: 90%;
+  position: relative;
 }
 
 .popup h2 {
-    margin-top: 0;
-    color: #000;
-    font-family: Tahoma, Arial, sans-serif;
+  margin-top: 0;
+  color: #000;
+  font-family: Tahoma, Arial, sans-serif;
 }
 .popup .close {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    transition: all 200ms;
-    font-size: 30px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #000;
 }
 .popup .close:hover {
     color: #06D85F;
@@ -178,10 +181,25 @@
   font-size: 20px;
 }
 
+.search_button {
+  font-size:1.2em; 
+  padding: 5px; 
+  text-align:center; 
+  background: rgba(255,255,255,1); 
+  border: 1px solid #ccc;
+  font-family: inherit;
+}
+
+.search_button:hover {
+  background: #ccc; 
+  border: 1px solid rgb(0, 0, 0); 
+
+}
+
 </style>
 </head>
 <body>
-    <div id="map" class="map" style="width: 100%; height: 98vh;">
+    <div id="map" class="map" style="width: 100%; height: 95vh;">
       <div id="info"></div>
 
     </div>
@@ -199,7 +217,7 @@
 
     <select style="width: 95%; font-size:1.2em;" class="choices__input choices__input--cloned start_price_input" id="full_name_search_input" placeholder="П.І.Б." ></select>
 
-    <p><button style="font-size:1.2em; padding: 5px; text-align:center" onclick="search_grave()">Показати на карті</button></p>
+    <p><button class="search_button" onclick="search_grave()">Показати на карті</button></p>
 
 </div>
 
